@@ -1,6 +1,6 @@
 import pandas as pd
 import tkinter as tk
-from tkinter import ttk, filedialog, messagebox
+from tkinter import ttk, messagebox
 
 df = None  # Variável global para armazenar o dataframe
 
@@ -9,9 +9,9 @@ def carregar_dados():
     file_path = 'C:/Users/catav/Downloads/analise_saude/ESaude2022.xlsx'
     if file_path:
         try:
-            xls = pd.ExcelFile(file_path)
-            df_q1_1 = pd.read_excel(file_path, sheet_name='Q1.1')
-            df_q1_2 = pd.read_excel(file_path, sheet_name='Q1.2')
+            # Especificar o motor openpyxl para arquivos .xlsx
+            df_q1_1 = pd.read_excel(file_path, sheet_name='Q1.1', engine='openpyxl')
+            df_q1_2 = pd.read_excel(file_path, sheet_name='Q1.2', engine='openpyxl')
 
             # Limpar e preparar os dados
             def clean_dataframe(df):
@@ -29,7 +29,11 @@ def carregar_dados():
             # Converter os anos para strings
             df.columns = df.columns.astype(str)
 
-            messagebox.showinfo("Sucesso", "Dados carregados e limpos com sucesso!")
+            # Salvar o dataframe mesclado em um novo arquivo Excel
+            merged_file_path = 'C:/Users/catav/Downloads/analise_saude/ESaude2022_merged.xlsx'
+            df.to_excel(merged_file_path, index=False)
+
+            messagebox.showinfo("Sucesso", f"Dados carregados, limpos e salvos em {merged_file_path} com sucesso!")
 
             # Exibir as categorias, subcategorias, subcategorias 2 e detalhes disponíveis
             categorias = df['Categoria'].unique().tolist()
